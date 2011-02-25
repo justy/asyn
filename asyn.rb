@@ -3,7 +3,9 @@ require 'sinatra/reloader' if development?
 require 'json'
 
 get '/' do
-  redirect '/boot.html'
+  #redirect '/boot.html'
+  @page_title = "booting.."
+  erb :boot
 end
 
 get '/payloads' do

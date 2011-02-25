@@ -7,7 +7,10 @@
 * Date: Fri Feb 25 13:55:29 2011 -0500
 */
 
-function sendPayloadRequest(element) {
+function sendPayloadRequest(element, request) {
+
+  // element is a string selector eg "#page"
+  // request is assumed to be valid JSON
 
   $(element).html("loading...");
   $.get(
@@ -23,7 +26,7 @@ function sendPayloadRequest(element) {
 
 function acceptPayload(element, payload) {
 
-  // element is a string eg "#page_1234"
+  // element is a string eg "#page"
   // payload is assumed to already be valid JSON
 
   // Bail if we got a dud response
