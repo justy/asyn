@@ -1,36 +1,50 @@
 /*!
- * asyn System v 0.0.1
- * http://coolfusion.com.au/asyn
- *
- * Copyright 2011, Justin James Clayden
- *
- * Date: Fri Feb 25 13:55:29 2011 -0500
- */
+* asyn System v 0.0.1
+* http://coolfusion.com.au/asyn
+*
+* Copyright 2011, Justin James Clayden
+*
+* Date: Fri Feb 25 13:55:29 2011 -0500
+*/
 
 function sendPayloadRequest(element) {
 
-  $("#page").html("loading...");
-   $.get(
-     "payloads",  // By convention
-     {"id":element},
-     function(data){
-       acceptPayload(element, data);
-     },
-     "text"
-   );
+  $(element).html("loading...");
+  $.get(
+    "payloads",  // By convention
+    {"id":element},
+    function(data){
+      acceptPayload(element, data);
+    },
+    "json" // Y not json??
+  );
 
 }
 
-function acceptPayload(element, payload_string) {
+function acceptPayload(element, payload) {
 
-  payload = JSON.parse(payload_string);
-  //payload_head = payload.head;
-  //payload_body = payload.body;
+  // element is a string eg "#page_1234"
+  // payload is assumed to already be valid JSON
 
-  $(element).html(payload_string);
+  // Bail if we got a dud response
+  status = payload.head.status;
 
-  //alert ("Status: " + payload_head.status);
-  //alert ("Body: " + payload_body);
+  if (status != 200) {
+    $(element).html(":(");
+    return;
+  }
+  body = payload.body;
+
+  // Do any commands
+  commands = body.commands;
+  if (commands.length > 0) {
+    // Do each command
+    //executeCommand()
+  }
+
+  // Render the content
+  content = body.content;
+  $(element).html(body.content);
 
 
-}
+  }
