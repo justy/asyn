@@ -1,6 +1,6 @@
 #asyn
 
-###asyn is an asynchronous lightweight open framework for performant and gracefully degrading web content.
+###asyn is an asynchronous lightweight open framework running on top of Sinatra that allows performant and gracefully degrading web content.
 
 ---
 
@@ -39,7 +39,15 @@ Whereas requests of this form:
 
 ###Server controller considerations
 
-Rather than simply passing back the results of requests, the Server may decide (because specific content requires it) to massage the content of the response, and/or, provide a list of commands for the client to execute.
+The simplest request handling is just to loop back the request, like so:
+
+    get '/payloads' do
+      params.to_json
+    end
+
+This is useful (only) for debugging.  Normally the server would fetch the content addressed by the either the `content_id` or `query_url`.
+
+However, rather than simply passing back the results of requests, the Server may decide (because specific content requires it) to massage the content of the response, and/or provide a list of commands for the client to execute.
 
 These commands include:
 
@@ -51,9 +59,9 @@ These commands include:
 
 ##Client
 
-By convention, when a DOM element `element` requests a payload, a callback will executed:
+By convention, when a DOM element `element` requests a payload and that payload becomes available, a callback will executed:
 
-    function acceptPayload(element, payload)
+    acceptPayload(element, payload);
 
 where `element` is a string, representing a DOM element, for example "#page" or "div", and `payload` is valid JSON, of the form:
 
@@ -72,5 +80,13 @@ where `element` is a string, representing a DOM element, for example "#page" or 
 where `command` is a JSON hash of the form:
 
     {
-      'verb' : 'command_verb' // e.g.
+      'verb' : 'command_verb',
+      'noun' : 'command_noun'
+    }
+
+e.g.
+
+    {
+      'verb' : 'sendPayloadRequest',
+      'noun' : {'content_id' : 'another_page'}
     }

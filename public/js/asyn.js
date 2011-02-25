@@ -19,7 +19,7 @@ function sendPayloadRequest(element, request) {
     function(data){
       acceptPayload(element, data);
     },
-    "json" // Y not json??
+    "json"
   );
 
 }
