@@ -3,7 +3,7 @@ require 'sinatra/reloader' if development?
 require 'json'
 require 'open-uri'
 
-  @@hack = "0"
+  @@hack = 0
 
 get '/' do
   #redirect '/boot.html'
@@ -92,8 +92,13 @@ def body_wrap content
   cmds << {'verb' => 'set_title','noun' => 'done.'}
   # HACK!
   puts request.url
-  cmds << {'verb' => 'send_payload_request','noun' => {'enquirer' => '#bottom_right', 'content_id' => 'table'}} if @@hack == "0"
-  @@hack = "1"
+  #puts @@hack
+  cmds << {'verb' => 'send_payload_request','noun' => {'enquirer' => '#bottom_right', 'content_id' => 'table'}} if @@hack == 0
+  cmds << {'verb' => 'send_payload_request','noun' => {'enquirer' => '#top_right', 'content_id' => 'aggregator'}} if @@hack == 1
+  cmds << {'verb' => 'send_payload_request','noun' => {'enquirer' => '#bottom_left', 'content_id' => 'aggregator'}} if @@hack == 2
+  #cmds << {'verb' => 'send_payload_request','noun' => {'enquirer' => '#bottom_left', 'content_id' => 'aggregator'}} if @@hack == 3
+      @@hack = @@hack + 1
+
 #  if request.url == "http://localhost:4567/payloads?content_id=aggregator"
  #     cmds << {'verb' => 'send_payload_request','noun' => {'enquirer' => '#bottom_right', 'external_query' => 'http://smh.com.au'}}
  #end
