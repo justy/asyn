@@ -26,7 +26,20 @@ get '/payloads' do
   #     }
 
   #'{"body":"jo"}'.to_json
-  returnGoodPayload ['requestPayload slot_100', 'requestPayload slot_101' ], 'blah'
+
+  # Obviously this does nothing but return some canned content
+
+  alert_command = {
+    'verb' => 'alert',
+    'noun' => 'wow!'
+    }.to_json;
+
+    commands = Array.new
+    commands << alert_command
+    #commands << alert_command
+
+
+   returnGoodPayload commands, 'Here\'s the content'
 
 end
 
@@ -52,6 +65,4 @@ def returnGoodPayload commands, content
         'content' => content
       }
     }.to_json
-
-
 end

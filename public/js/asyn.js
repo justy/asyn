@@ -38,16 +38,38 @@ function acceptPayload(element, payload) {
   }
   body = payload.body;
 
-  // Do any commands
-  commands = body.commands;
-  if (commands.length > 0) {
-    // Do each command
-    //executeCommand()
-  }
 
   // Render the content
   content = body.content;
   $(element).html(body.content);
 
-
+  // Do any commands
+  commands = body.commands;
+  //alert(commands);
+  //alert (typeof(commands));
+  if (commands.length > 0) {
+    // Do each command
+    for (c in commands) {
+      executeCommand(JSON.parse(commands[c]));
+    }
   }
+
+
+
+}
+
+function executeCommand(command) {
+  //document.write(typeof(command));
+  verb = command.verb;
+  noun = command.noun;
+  //alert (verb + ", "+ noun);
+  if (typeof(noun) == 'string') {
+    // String noun
+    //alert (verb + " " + noun); // I know, I know..
+    if (verb == 'alert') {
+      alert(noun);
+    }
+  }
+
+
+}
