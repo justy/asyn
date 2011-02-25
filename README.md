@@ -52,8 +52,7 @@ Whereas requests of this form:
 The simplest request handling is just to loop back the request, like so:
 
     get '/payloads' do
-      params.to_json
-    end
+      body_wrap params.to_json  # body_wrap returns a valid asyn   (and therefore JSON) response
 
 This is useful (only) for debugging.  Normally the server would fetch the content addressed by the either the `content_id` or `query_url`.
 

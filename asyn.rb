@@ -1,20 +1,43 @@
 require 'sinatra'
 require 'sinatra/reloader' if development?
 require 'json'
+require 'open-uri'
+
+  @@hack = "0"
 
 get '/' do
   #redirect '/boot.html'
   @page_title = "booting.."
+
   erb :boot
 end
 
 get '/payloads' do
 
-  puts params
+  puts "params:" + params.to_s
+
+  if params[:content_id]
+
+    # 'routes' for internal assets
+
+      return body_wrap(erb :aggregator) if params[:content_id] == 'aggregator'
+
+      return body_wrap(erb :table) if params[:content_id] == 'table'
+
+
+  end
+
+  if params[:external_query]
+    puts "External query"
+    response = body_wrap(open(params[:external_query]).read)
+
+  end
+
+  #puts params
   # echo back for debugging
 
-  puts body_wrap params
-  body_wrap params
+  #puts body_wrap params
+  #body_wrap params.to_json
 
   # Simply retrieve the payload for the provided id
   # Eg
@@ -58,21 +81,34 @@ get '/marjee' do
 end
 
 
-
+# wraps a valid asyn JSON container around 'content'
+# bonus feature: It adds a title setting test just
+# for shits n gigs
 def body_wrap content
 
   puts "Bodywrapping content: " + content.to_s
 
   cmds = Array.new
+  cmds << {'verb' => 'set_title','noun' => 'done.'}
+  # HACK!
+  puts request.url
+  cmds << {'verb' => 'send_payload_request','noun' => {'enquirer' => '#bottom_right', 'content_id' => 'table'}} if @@hack == "0"
+  @@hack = "1"
+#  if request.url == "http://localhost:4567/payloads?content_id=aggregator"
+ #     cmds << {'verb' => 'send_payload_request','noun' => {'enquirer' => '#bottom_right', 'external_query' => 'http://smh.com.au'}}
+ #end
 
-  {
+  response = {
       'head' => {
         'status' => 200
       },
       'body' => {
         'commands' => cmds,
-        'content' => content
+        'content' => content.gsub("\n","") #"[=----------------------=]")
       }
   }.to_json
+
+  puts response
+  response
 
 end
