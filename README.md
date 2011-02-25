@@ -1,8 +1,18 @@
+*** This is highly v0.0.1
+
 #asyn
 
 ###asyn is an asynchronous lightweight open framework running on top of Sinatra that allows performant and gracefully degrading web content.
 
 ---
+
+##Quick Start
+
+Kick it off out of the box with
+
+    ruby -rubygems asyn.rb
+
+Open a browser and point it to `http://localhost:4567` to see it in action.
 
 #API
 

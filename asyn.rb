@@ -9,8 +9,12 @@ get '/' do
 end
 
 get '/payloads' do
+
+  puts params
   # echo back for debugging
-  # params.to_json
+
+  puts body_wrap params
+  body_wrap params
 
   # Simply retrieve the payload for the provided id
   # Eg
@@ -29,17 +33,17 @@ get '/payloads' do
 
   # Obviously this does nothing but return some canned content
 
-  alert_command = {
-    'verb' => 'alert',
-    'noun' => 'wow!'
-    }.to_json;
-
-    commands = Array.new
-    commands << alert_command
-    #commands << alert_command
-
-
-   returnGoodPayload commands, 'Here\'s the content'
+  # alert_command = {
+  #    'verb' => 'alert',
+  #    'noun' => 'wow!'
+  #    }.to_json;
+  #
+  #    commands = Array.new
+  #    commands << alert_command
+  #    #commands << alert_command
+  #
+  #
+  #   returnGoodPayload commands, 'Here\'s the content'
 
 end
 
@@ -55,14 +59,20 @@ end
 
 
 
-def returnGoodPayload commands, content
-    {
+def body_wrap content
+
+  puts "Bodywrapping content: " + content.to_s
+
+  cmds = Array.new
+
+  {
       'head' => {
         'status' => 200
       },
       'body' => {
-        'commands' => commands,
+        'commands' => cmds,
         'content' => content
       }
-    }.to_json
+  }.to_json
+
 end
