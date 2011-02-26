@@ -2,7 +2,7 @@
 
 #asyn
 
-###asyn is an asynchronous lightweight open framework running on top of Sinatra that allows performant and gracefully degrading web content.
+###asyn is an asynchronous lightweight open framework that renders performant and gracefully degrading web content.
 
 ---
 
@@ -22,7 +22,9 @@ The Client kernel (a few lines of Javascript) sends requests to the server via a
 
     sendPayloadRequest(element, request);
 
-where `element` is a string representing a DOM element _(really a selector that will be passed to jQuery)_ and `request` is valid JSON.
+where `element` is a string representing a DOM element _(really a selector that will be passed to jQuery)_ and `request` is valid JSON.  In essence:
+
+    'Request content to put into this element.'
 
 This function sends a GET to `/payloads`.
 
