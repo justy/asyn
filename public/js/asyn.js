@@ -8,8 +8,35 @@
 */
 
 
+// Interrogate each element for any asyn metadata
+// Form a query based on this metadata and
+// send it to the server
+function asyn_boot() {
 
-function sendPayloadRequest(element, request) {
+  console.log("Booting asyn");
+
+  els = $("*[data-asyn]"); //.children();
+  console.log(els);
+
+  els.each(
+    // For each asyn enabled element
+    // Do its command
+    function() {
+      asyn_stuff =  $(this).attr("data-asyn");
+      // Inject the element's id
+      //if (els.attr("id")) {
+          asyn_stuff.element_id = els.attr("id");
+      //}
+      console.log(asyn_stuff);
+      asyn_do(asyn_stuff);
+    }
+
+  )
+
+}
+
+// RENAME THIS
+function asyn_request (element, request) {
 
   // element is a string selector eg "#page"
   // request is assumed to be valid JSON
@@ -26,6 +53,7 @@ function sendPayloadRequest(element, request) {
 
 }
 
+// REFACTOR THIS
 function acceptPayload(element, payload) {
 
   // element is a string eg "#page"
@@ -54,7 +82,7 @@ function acceptPayload(element, payload) {
     for (var c in commands) {
       command = commands[c];
       //console.log(command.toString());
-      executeCommand(command);
+      asyn_do(command);
     }
   }
 
@@ -62,13 +90,18 @@ function acceptPayload(element, payload) {
 
 }
 
-function executeCommand(command) {
+function asyn_do(command) {
 
-  //console.log("executeCommand: " + command
+  console.log(command);
+  console.log(typeof(command));
+  asyn_json = $.parseJSON(command);
+  console.log(typeof(asyn_json));
+  console.log("asyn_do: " + asyn_json);
   //console.log("command is a type of " + typeof(command));
-  verb = command.verb;
-  noun = command.noun;
-  console.log (verb + " with "+ noun);
+  verb = asyn_json.query;
+  noun = asyn_json.value;
+
+  console.log ("verb: " + verb + ", noun: " + noun);
   if (typeof(noun) == 'string') {
 
     // String noun
@@ -83,14 +116,16 @@ function executeCommand(command) {
       document.title = noun;
     }
 
+    if (verb == "local_id") {
+      console.log("Sending payload request: " + noun + " on behalf of: " + $(this) );
+      asyn_request($(this), noun);
+    }
+
   }
 
   if (typeof(noun) == 'object') {
 
-    if (verb == 'send_payload_request') {
-      console.log("Sending payload request: " + noun + "on behalf of: " + noun.enquirer );
-      sendPayloadRequest(noun.enquirer, noun);
-    }
+
 
 
   }

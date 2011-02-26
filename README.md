@@ -28,13 +28,16 @@ where `element` is a string representing a DOM element _(really a selector that 
 
 This function sends a GET to `/payloads`.
 
+** This has to be re-implemented to reflect this change: the refactoring of this data structure,
+adding a 'query' key, with possible values of 'local_id' and 'uri' as well as a 'value' key.  (Similar to verb/noun elsewhere) **
+
 For example:
 
-    sendPayloadRequest('#page', {'content_id' : 'unique_content_id'});
+    sendPayloadRequest('#page', {'query' : 'local_id', 'value' : 'page_9317091723' });
 
 or
 
-    sendPayloadRequest('#page', {'external_query' : 'http://foo.bar/baz'});
+    sendPayloadRequest('#page', {'query' : 'uri' , 'value' : 'http://coolfusion.com.au' });
 
 Requests of this form:
 

@@ -7,52 +7,23 @@
   <title><%= @page_title %></title>
   <meta name="generator" content="asyn by Cool Fusion">
   <meta name="author" content="Justin Clayden">
-  <style type="text/css">
-   body {
-      font: 95% "Lucida Grande", "Trebuchet MS", Verdana, sans-serif;
-     color: black;
-     background-color: #eeddff }
-     #top_left {
-        position: relative;
-        color: red;
-        left: 50px;
-        background-color: #ffdd88;
-      }
-      #top_right {
-         position: static;
-         top: 50px;
-         float: left;
-         color: blue;
-         right: 2000px;
-         background-color: #ddddee;
-       }
-       #bottom_left {
-          position: relative;
-          color: green;
-          left: 50px;
-          background-color: #ffddee;
-        }
-        #bottom_right {
-           position: relative;
-           color: purple;
-           right: -250px;
-           background-color: #ffaaee;
-         }
+  <style type="text/css" src="css/gold.css">
    </style>
    <script type="text/javascript" src="/js/jquery-1.5.1.js"></script>
    <script type="text/javascript" src="/js/asyn.js"></script>
    <script type="text/javascript">
-   window.onload = function() {
-     sendPayloadRequest("#page", {'content_id' : 'aggregator'});
+   //document.ready = function() {
+     window.onload = function() {
+       console.log("Calling boot");
+     asyn_boot();
    }
    </script>
   <!-- Date: 2011-02-25 -->
 </head>
 <body>
-<div id="page"></div>
+<div id="page" data-asyn='{"query":"local_id","value":"aggregator","sender":"page_uuid123095702357"}'></div>
 </body>
 </html>
-
 
 
 

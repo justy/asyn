@@ -18,7 +18,7 @@ get '/payloads' do
 
   if params[:content_id]
 
-    # 'routes' for internal assets
+    # 'routes' for internal assets - tp move into a DB, obv.
 
       return body_wrap(erb :aggregator) if params[:content_id] == 'aggregator'
 
@@ -93,10 +93,10 @@ def body_wrap content
   # HACK!
   #puts request.url
   #puts @@hack
-  #cmds << {'verb' => 'send_payload_request','noun' => {'enquirer' => '#bottom_right', 'content_id' => 'table'}} if @hack == 0
-  #cmds << {'verb' => 'send_payload_request','noun' => {'enquirer' => '#top_right', 'content_id' => 'aggregator'}} if @hack == 1
-  #cmds << {'verb' => 'send_payload_request','noun' => {'enquirer' => '#bottom_left', 'content_id' => 'aggregator'}} if @hack == 2
-  #cmds << {'verb' => 'send_payload_request','noun' => {'enquirer' => '#bottom_left', 'content_id' => 'aggregator'}} if @@hack == 3
+  #cmds << {'verb' => 'query','noun' => {'enquirer' => '#bottom_right', 'content_id' => 'table'}} if @hack == 0
+  #cmds << {'verb' => 'query','noun' => {'enquirer' => '#top_right', 'content_id' => 'aggregator'}} if @hack == 1
+  #cmds << {'verb' => 'query','noun' => {'enquirer' => '#bottom_left', 'content_id' => 'aggregator'}} if @hack == 2
+  #cmds << {'verb' => 'query','noun' => {'enquirer' => '#bottom_left', 'content_id' => 'aggregator'}} if @@hack == 3
    #   @hack = @hack + 1
     #  @hack = 0 if @hack == 3
 
