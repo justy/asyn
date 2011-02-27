@@ -1,12 +1,15 @@
 *** This is highly v0.0.1
 
-#asyn
+# asyn #
 
-###asyn is an asynchronous lightweight open framework that renders performant and gracefully degrading web content.
+###asyn is an asynchronous, open, performant Javascript framework that renders web content.
 
----
+* Open : asyn is designed to be server agnostic.  A server only needs to conform to a simple protocol to work with asyn.
 
-##Quick Start
+* Performant : Non-blocking is the name of the game.
+
+
+## Quick Start ##
 
 Kick it off out of the box with
 
@@ -14,9 +17,9 @@ Kick it off out of the box with
 
 Open a browser and point it to `http://localhost:4567` to see it in action.
 
-#API
+# API #
 
-##Server
+## Server ##
 
 The Client kernel (a few lines of Javascript) sends requests to the server via a single function:
 
@@ -33,22 +36,22 @@ adding a 'query' key, with possible values of 'local_id' and 'uri' as well as a 
 
 For example:
 
-    sendPayloadRequest('#page', {'query' : 'local_id', 'value' : 'page_9317091723' });
+    asyn_request('#page', {'query' : 'request_local_id' , 'value' : 'page_9317091723' });
 
 or
 
-    sendPayloadRequest('#page', {'query' : 'uri' , 'value' : 'http://coolfusion.com.au' });
+    asyn_request('#page', {'query' : 'request_local_uri' , 'value' : 'http://coolfusion.com.au' });
 
 Requests of this form:
 
-    { 'content_id' : 'foo_id' }
+    { 'request_local_id' : 'foo_id' }
 
 .. should return HTML content accessible by the id 'foo_id' in the DB.  (Or however your controller decides to return this content.  )
 
 
 Whereas requests of this form:
 
-    { 'external_query' : 'http://query_url' } // on the webs
+    { 'request_uri' : 'http://query_url' } // on the webs
 
 .. should return HTML content from an external site.
 
@@ -75,7 +78,7 @@ These commands include:
 
 By convention, when a DOM element `element` requests a payload and that payload becomes available, a callback will executed:
 
-    acceptPayload(element, payload);
+    asyn_receive(element, payload);
 
 where `element` is a string, representing a DOM element, for example "#page" or "div", and `payload` is valid JSON, of the form:
 
@@ -83,12 +86,7 @@ where `element` is a string, representing a DOM element, for example "#page" or 
       'head' : {
         'status' : '200'
       },
-      'body' : {
-        'commands' : [command, command, .. ]
-        'content' : "html_content"
-        }
-      }
-
+      'body' : [command, command, .. ]
     }
 
 where `command` is a JSON hash of the form:
@@ -101,6 +99,6 @@ where `command` is a JSON hash of the form:
 e.g.
 
     {
-      'verb' : 'sendPayloadRequest',
-      'noun' : {'content_id' : 'another_page'}
+      'verb' : 'request_local_id',
+      'noun' : 'unique_content_id'}
     }

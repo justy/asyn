@@ -20,6 +20,11 @@ body {
   padding: 0em 2em 2em 2em;
 }
 
+#log {
+ padding: 2em 2em 2em 2em;
+ color: #444;
+ font-size: 75%;
+}
 
 /* NAVIGATION AND BANNER */
 ul#nav li {
@@ -138,7 +143,11 @@ pre {
   white-space: pre-wrap;
 }
 pre, code {
-  color: #432;
+  display: block;
+  padding: 5px;
+  margin: 10px;
+  background-color: #222;
+  color: #eee;
   font-size: 0.95em;
   font-family: courier new;
 }

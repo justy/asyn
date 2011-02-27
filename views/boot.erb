@@ -7,21 +7,28 @@
   <title><%= @page_title %></title>
   <meta name="generator" content="asyn by Cool Fusion">
   <meta name="author" content="Justin Clayden">
-  <style type="text/css" src="css/gold.css">
-   </style>
+  <link rel="stylesheet" href="/css/gold.css" type="text/css" />
+    <link rel="stylesheet" href="/css/debug.css" type="text/css" />
    <script type="text/javascript" src="/js/jquery-1.5.1.js"></script>
    <script type="text/javascript" src="/js/asyn.js"></script>
+   <script type="text/javascript" src="/js/jquery.json-2.2.min.js"></script>
+
    <script type="text/javascript">
    //document.ready = function() {
      window.onload = function() {
-       console.log("Calling boot");
+       //blog("Calling boot");
      asyn_boot();
    }
    </script>
   <!-- Date: 2011-02-25 -->
 </head>
 <body>
-<div id="page" data-asyn='{"query":"local_id","value":"aggregator","sender":"page_uuid123095702357"}'></div>
+  <div id="bottom" data-asyn='{"verb":"request_uri","noun":"http://freezing-fire.heroku.com", "sender":"page_uuidbar"}'>TOP!!</div>
+  <table border='15'><tr><td>
+<div id="page" data-asyn='{"verb" : "request_local_id", "noun" : "aggregator" , "sender" : "page_foo"}'></div>
+</td></tr></table>
+
+<div id="footer"></div>
 </body>
 </html>
 

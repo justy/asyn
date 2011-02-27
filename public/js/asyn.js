@@ -7,60 +7,119 @@
 * Date: Fri Feb 25 13:55:29 2011 -0500
 */
 
+var foundDataLastActivation;
+var activeRequests;
+
+var debug_slomo;
+
+function log(msg) {
+  console.log(msg);
+  $("#footer").html($("#footer").html() + "<br>" + msg );
+  //$("#log").html($("#log").html() + "<br>" + $.error());
+}
+
+function blog(msg) {
+  log("<div class='log'>"+ msg +"</div>");
+}
 
 // Interrogate each element for any asyn metadata
 // Form a query based on this metadata and
 // send it to the server
 function asyn_boot() {
+  debug_slomo = false;
 
-  console.log("Booting asyn");
+  blog("Booting asyn");
+  foundDataLastActivation = false;
+  activeRequests = 0;
+  asyn_activate($("*[data-asyn]"));
+}
 
-  els = $("*[data-asyn]"); //.children();
-  console.log(els);
+// Parse, execute and scrub every element in the DOM
+// with a data-asyn attribute
+function asyn_activate(els) {
+
+  var foundData = false;
+
+  if (typeof(els)=='undefined') {
+    blog("nil els");
+    return;
+  }
+  //var els = $("*[data-asyn]"); //.children();
+  //log(els);
+  blog ("Found " + els.length + " data-asyn bearers");
 
   els.each(
+
     // For each asyn enabled element
     // Do its command
     function() {
-      asyn_stuff =  $(this).attr("data-asyn");
-      // Inject the element's id
-      //if (els.attr("id")) {
-          asyn_stuff.element_id = els.attr("id");
-      //}
-      console.log(asyn_stuff);
-      asyn_do(asyn_stuff);
+
+      var asyn_stuff = $(this).attr("data-asyn");
+      blog ("DAB:" + asyn_stuff );
+      var asyn_json = $.parseJSON(asyn_stuff);
+      // log("id: " + $(this).attr("id"));
+      // Inject the element's id  (WTF?  Not happening..)
+      if ($(this).attr("id")) {
+        asyn_json.element_id = "#" + $(this).attr("id");
+        $(this).removeAttr("data-asyn");
+        foundDataLastActivation = true;
+        if (debug_slomo){
+          blog("sloooooommmmmmmooooooo");
+          chill(100);
+          asyn_do(asyn_json);
+          chill(100);
+        } else {
+         asyn_do(asyn_json);
+       }
+
+     }
+      //log("asyn_json: " + asyn_json);
+     //log("data-asyn: " + $(this).attr("data-asyn"));
     }
 
   )
 
 }
 
-// RENAME THIS
+// Send a request to the Server
 function asyn_request (element, request) {
 
+  if (debug_slomo) {
+    chill(1000);
+  }
   // element is a string selector eg "#page"
   // request is assumed to be valid JSON
 
-  $(element).html("loading...");
+  $(element).html("loading...");  // temp
   $.get(
     "payloads",  // By convention
     request,
     function(data){
-      acceptPayload(element, data);
+      asyn_receive(element, data);
     },
     "json"
   );
 
+  activeRequests++;
+
+  log("<div class='client_send'>Active Requests: " + activeRequests + "</div>");
+
 }
 
 // REFACTOR THIS
-function acceptPayload(element, payload) {
+function asyn_receive(element, payload) {
 
+  activeRequests--;
+
+  log("<div class='client_receive'>Active Requests: " + activeRequests + "</div>");
+
+  log("<div class='client_receive'>Accepting payload: " + payload + " for element: " + element + "</code>");
   // element is a string eg "#page"
   // payload is assumed to already be valid JSON
 
   // Bail if we got a dud response
   var status = payload.head.status;
+  log("<div class='client_receive'>Status: " + status + "</div>");
 
   if (status != 200) {
     $(element).html(":(");
@@ -68,67 +127,98 @@ function acceptPayload(element, payload) {
   }
   var body = payload.body;
 
-
-  // Render the content
-  var content = body.content;
-  $(element).html(body.content);
-
-  // Do any commands
-  commands = body.commands;
-  //alert(commands);
-  //alert (typeof(commands));
-  if (commands.length > 0) {
-    // Do each command
-    for (var c in commands) {
-      command = commands[c];
-      //console.log(command.toString());
+//  log("type of body: " + typeof(body));
+  if (typeof(body) == 'object') {
+    blog("There are " + body.length + " things to do.");
+    for (var c in body) {
+      command = body[c];
+      command.element_id = element;
+      //log("command: " + command.toString());
       asyn_do(command);
     }
+  } else {
+    asyn_do(body);
   }
 
+  blog("Found data: " + foundDataLastActivation);
+  blog("Active requests: " + activeRequests);
 
+  // Recurse
+  if (activeRequests < 5  && foundDataLastActivation) {
+    blog("recursing..")
+    asyn_activate($("*[data-asyn]"));
+  }
 
 }
 
+// Do a single command
 function asyn_do(command) {
 
-  console.log(command);
-  console.log(typeof(command));
-  asyn_json = $.parseJSON(command);
-  console.log(typeof(asyn_json));
-  console.log("asyn_do: " + asyn_json);
-  //console.log("command is a type of " + typeof(command));
-  verb = asyn_json.query;
-  noun = asyn_json.value;
+  //log("Type of command: " + typeof(command));
+  log("<div class='client_do'>asyn_do:" + $.toJSON(command) + "</div>");//asyn_json);
+  //log("command is a type of " + typeof(command));
+  verb = command.verb;
+  noun = command.noun;
+  sender = command.sender;
+  element_id = command.element_id;
 
-  console.log ("verb: " + verb + ", noun: " + noun);
+  // blog ("verb: " + verb + ", noun: " + noun);
   if (typeof(noun) == 'string') {
 
     // String noun
 
+    if (verb == 'set_content') {
+     log("<div class='client_do'>Setting content for element: " + element_id + " " + noun + "</div>");
+     $(element_id).html(noun);
+       return;
+    }
+
+    if (verb == 'log') {
+      blog(noun);
+    }
+
     if (verb == 'alert') {
-      console.log("Displaying alert: " + noun);
+      log("<div class='client_do'>Displaying alert: " + noun + "</div>");
       alert(noun);
     }
 
     if (verb == 'set_title') {
-      console.log("Setting title to: " + noun);
+      log("<div class='client_do'>Setting title to: " + noun + "</div>");
       document.title = noun;
     }
 
-    if (verb == "local_id") {
-      console.log("Sending payload request: " + noun + " on behalf of: " + $(this) );
-      asyn_request($(this), noun);
+    if (verb == 'request_uri') {
+      if (element_id) {
+        log("<div class='client_send_external'>Sending external request: " + noun + " on behalf of: " + element_id + "</div>" );
+        asyn_request(element_id, command);
+      } else {
+        log("No element ID provided.");
+      }
+    }
+
+    if (verb == 'request_local_id') {
+      if (element_id) {
+        log("<div class='client_send'>Sending payload request: " + noun + " on behalf of: " + element_id + "</div>" );
+        asyn_request(element_id, command);
+      } else {
+        log("No element ID provided.");
+      }
     }
 
   }
 
-  if (typeof(noun) == 'object') {
+}
 
 
 
 
-  }
 
 
+function chill(millis)
+{
+var date = new Date();
+var curDate = null;
+
+do { curDate = new Date(); }
+while(curDate-date < millis);
 }

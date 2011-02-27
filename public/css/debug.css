@@ -1,0 +1,53 @@
+
+
+.client_do {
+  width: 600px;
+  padding: 5px;
+  margin-left: 10px;
+  background-color: #222;
+  color: #9090ff;
+  font-size: 0.95em;
+  font-family: courier new;
+}
+
+.client_send {
+  width: 400px;
+  padding: 5px;
+  margin-left: 100px;
+  background-color: #222;
+  color: #2e2;
+  font-size: 0.95em;
+  font-family: courier new;
+}
+
+.client_send_external {
+  width: 400px;
+  padding: 5px;
+  margin-left: 100px;
+  background-color: #222;
+  color: #2ef;
+  font-size: 0.95em;
+  font-family: courier new;
+}
+
+.client_receive {
+  width: 400px;
+  padding: 5px;
+  margin-left: 350px;
+  background-color: #222;
+  color: #e22;
+  font-size: 0.95em;
+  font-family: courier new;
+}
+
+.log {
+  width: 100%;
+  padding: 5px;
+  margin-left: 10px;
+  margin-right: 100px;
+  background-color: #222;
+  color: #ccc;
+  text-align: center;
+  font-size: 1.5em;
+  font-family: courier new;
+}
