@@ -30,15 +30,40 @@ puts params[:verb]
 
     puts "External query"
     begin
-    response = body_wrap(open(params[:noun]).read)
+    body_wrap(open(params[:noun]).read)
     rescue
+      return {
+        'head' => {
+          'status' => 404
+        }
+      }
+    end
 
+  end
+
+  if params[:verb] == "request_uri_body"
+
+    puts "External query"
+    begin
+    body_wrap(open(params[:noun]).read)
+    rescue
+      return {
+        'head' => {
+          'status' => 404
+        }
+      }
     end
 
   end
 
   #puts params
   # echo back for debugging
+
+  return {
+    'head' => {
+      'status' => 404
+    }
+  }
 
 end
 

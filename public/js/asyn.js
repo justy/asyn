@@ -90,7 +90,25 @@ function asyn_request (element, request) {
   // element is a string selector eg "#page"
   // request is assumed to be valid JSON
 
-  $(element).html("loading...");  // temp
+  $(element).html("<div class='loading'>loading...</div>");  // temp
+
+  $.ajax({
+    type: "GET",
+    url: "payloads",
+    data: request,
+    dataType: "json",
+    success: function(data) {
+      asyn_receive(element,data);
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+      blog(textStatus);
+      blog(errorThrown);
+      asyn_error(element,textStatus);
+    }
+
+  });
+
+/*
   $.get(
     "payloads",  // By convention
     request,
@@ -99,6 +117,7 @@ function asyn_request (element, request) {
     },
     "json"
   );
+  */
 
   activeRequests++;
 
@@ -146,8 +165,14 @@ function asyn_receive(element, payload) {
   // Recurse
   if (activeRequests < 5  && foundDataLastActivation) {
     blog("recursing..")
-    asyn_activate($("*[data-asyn]"));
+   asyn_activate($("*[data-asyn]"));
   }
+
+}
+
+function asyn_error(element, data) {
+ // alert("error");
+  blog("***********ERROR*********" + data.status);
 
 }
 
@@ -188,6 +213,15 @@ function asyn_do(command) {
     }
 
     if (verb == 'request_uri') {
+      if (element_id) {
+        log("<div class='client_send_external'>Sending external request: " + noun + " on behalf of: " + element_id + "</div>" );
+        asyn_request(element_id, command);
+      } else {
+        log("No element ID provided.");
+      }
+    }
+
+    if (verb == 'request_uri_body') {
       if (element_id) {
         log("<div class='client_send_external'>Sending external request: " + noun + " on behalf of: " + element_id + "</div>" );
         asyn_request(element_id, command);
